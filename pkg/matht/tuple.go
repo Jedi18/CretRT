@@ -48,7 +48,10 @@ func (t *Tuple) Sub(t1 Tuple) {
 }
 
 func Equal(t1 Tuple, t2 Tuple) bool {
-	return t1.X == t2.X && t1.Y == t2.Y && t1.Z == t2.Z && t1.W == t2.W
+	checkX := math.Abs(t1.X - t2.X) < 0.00001
+	checkY := math.Abs(t1.Y - t2.Y) < 0.00001
+	checkZ := math.Abs(t1.Z - t2.Z) < 0.00001
+	return checkX && checkY && checkZ
 }
 
 func Negate(t1 Tuple) Tuple {
@@ -119,4 +122,15 @@ func (t *Tuple) Cross(t1 Tuple) Tuple {
 
 func Cross(t1 Tuple, t2 Tuple) Tuple {
 	return t1.Cross(t2)
+}
+
+func Color(r float64, g float64, b float64) Tuple {
+	return Tuple{r, g, b, 0}
+}
+
+func HadamardProduct(t1 Tuple, t2 Tuple) Tuple {
+	t1.X *= t2.X
+	t1.Y *= t2.Y
+	t1.Z *= t2.Z
+	return t1
 }

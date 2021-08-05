@@ -1,8 +1,10 @@
 package features
 
 import (
+	"CretRT/pkg/graphics"
 	"CretRT/pkg/matht"
 	"math"
+	"strings"
 	"testing"
 )
 
@@ -209,5 +211,96 @@ func TestCross(t *testing.T) {
 
 	if !matht.Equal(res3, matht.Vector(-1, 2, -1)) {
 		t.Fatal("Cross product of the tuples gives wrong answer")
+	}
+}
+
+func TestColorOperations(t *testing.T) {
+	c1 := matht.Color(0.9, 0.6, 0.75)
+	c2 := matht.Color(0.7, 0.1, 0.25)
+
+	res := matht.Add(c1, c2)
+
+	if !matht.Equal(res, matht.Color(1.6, 0.7, 1.0)) {
+		t.Fatal("Addition of colors gives wrong answer")
+	}
+
+	res1 := matht.Sub(c1, c2)
+	if !matht.Equal(res1, matht.Color(0.2, 0.5, 0.5)) {
+		t.Fatal("Subtraction of colors gives wrong answer")
+	}
+
+	res2 := matht.Multiply(matht.Color(0.2, 0.3, 0.4), 2)
+
+	if !matht.Equal(res2, matht.Color(0.4, 0.6, 0.8)) {
+		t.Fatal("Multiplication of colors gives wrong answer")
+	}
+}
+
+func TestHadamardProduct(t *testing.T) {
+	c1 := matht.Color(1, 0.2, 0.4)
+	c2 := matht.Color(0.9, 1, 0.1)
+	res := matht.HadamardProduct(c1, c2)
+
+	if !matht.Equal(res, matht.Color(0.9, 0.2, 0.04)) {
+		t.Fatal("Hadamard product of colors gives wrong answer")
+	}
+}
+
+func TestCanvasCreate(t *testing.T) {
+	canvas := graphics.CreateCanvas(10, 20)
+
+	if canvas.Width != 10 || canvas.Height != 20 {
+		t.Fatal("Rows and columns of canvas not set properly")
+	}
+
+	if canvas.Width != len(canvas.Arr) || canvas.Height != len(canvas.Arr[0]) {
+		t.Fatal("Rows and columns of canvas not set properly")
+	}
+
+	for r := 0; r < canvas.Width; r++ {
+		for c := 0; c < canvas.Height; c++ {
+			if !matht.Equal(canvas.Arr[r][c], matht.Color(0, 0, 0)) {
+				t.Fatal("All colors should be initially initialized to zero")
+			}
+		}
+	}
+}
+
+func TestWriteAndReadPixel(t *testing.T) {
+	canvas := graphics.CreateCanvas(10, 20)
+	col := matht.Color(1, 0, 0)
+	canvas.WritePixel(4, 15, col)
+
+	if !matht.Equal(canvas.Arr[4][15], col) {
+		t.Fatal("Write pixel did not write the pixel properly")
+	}
+
+	if !matht.Equal(canvas.PixelAt(4, 15), col) {
+		t.Fatal("Pixel at did not read the correct pixel")
+	}
+}
+
+func TestCanvasToPPM(t *testing.T) {
+	c := graphics.CreateCanvas(5, 3)
+	c.WritePixel(0, 0, matht.Color(1.5, 0, 0))
+	c.WritePixel(2, 1, matht.Color(0, 0.5, 0))
+	c.WritePixel(4, 2, matht.Color(-0.5, 0, 1))
+
+	str := "P3\n5 3\n255\n255 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 127 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 255\n"
+	if str != graphics.CanvasToPPM(&c) {
+		t.Fatal("Incorrect Canvas to PPM conversion")
+	}
+}
+
+func TestCanvasPPMLineLength(t *testing.T) {
+	c := graphics.CreateCanvas(10, 2)
+	c.Fill(matht.Color(1, 0.8, 0.6))
+
+	ppmStr := graphics.CanvasToPPM(&c)
+
+	for _, line := range strings.Split(ppmStr, "\n") {
+		if len(line) > 70 {
+			t.Fatal("Line length of PPM file above 70 characters")
+		}
 	}
 }
