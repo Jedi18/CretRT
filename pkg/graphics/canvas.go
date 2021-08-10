@@ -3,6 +3,7 @@ package graphics
 import (
 	"CretRT/pkg/matht"
 	"fmt"
+	"io/ioutil"
 	"math"
 	"strings"
 )
@@ -72,4 +73,13 @@ func CanvasToPPM(canvas *Canvas) string {
 	}
 
 	return sb.String()
+}
+
+func (canvas *Canvas) WriteCanvasToFile(filepath string) {
+	data := []byte(CanvasToPPM(canvas))
+	err := ioutil.WriteFile(filepath, data, 0644)
+
+	if err != nil {
+		print("Error while writing to file\n")
+	}
 }
