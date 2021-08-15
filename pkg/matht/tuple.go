@@ -51,7 +51,8 @@ func Equal(t1 Tuple, t2 Tuple) bool {
 	checkX := math.Abs(t1.X - t2.X) < 0.00001
 	checkY := math.Abs(t1.Y - t2.Y) < 0.00001
 	checkZ := math.Abs(t1.Z - t2.Z) < 0.00001
-	return checkX && checkY && checkZ
+	checkW := math.Abs(t1.W - t2.W) < 0.00001
+	return checkX && checkY && checkZ && checkW
 }
 
 func Negate(t1 Tuple) Tuple {

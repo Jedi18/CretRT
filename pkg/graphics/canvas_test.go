@@ -1,14 +1,13 @@
-package features
+package graphics
 
 import (
-	"CretRT/pkg/graphics"
 	"CretRT/pkg/matht"
 	"strings"
 	"testing"
 )
 
 func TestCanvasCreate(t *testing.T) {
-	canvas := graphics.CreateCanvas(10, 20)
+	canvas := CreateCanvas(10, 20)
 
 	if canvas.Width != 10 || canvas.Height != 20 {
 		t.Fatal("Rows and columns of canvas not set properly")
@@ -28,7 +27,7 @@ func TestCanvasCreate(t *testing.T) {
 }
 
 func TestWriteAndReadPixel(t *testing.T) {
-	canvas := graphics.CreateCanvas(10, 20)
+	canvas := CreateCanvas(10, 20)
 	col := matht.Color(1, 0, 0)
 	canvas.WritePixel(4, 15, col)
 
@@ -42,22 +41,22 @@ func TestWriteAndReadPixel(t *testing.T) {
 }
 
 func TestCanvasToPPM(t *testing.T) {
-	c := graphics.CreateCanvas(5, 3)
+	c := CreateCanvas(5, 3)
 	c.WritePixel(0, 0, matht.Color(1.5, 0, 0))
 	c.WritePixel(2, 1, matht.Color(0, 0.5, 0))
 	c.WritePixel(4, 2, matht.Color(-0.5, 0, 1))
 
 	str := "P3\n5 3\n255\n255 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 127 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 255\n"
-	if str != graphics.CanvasToPPM(&c) {
+	if str != CanvasToPPM(&c) {
 		t.Fatal("Incorrect Canvas to PPM conversion")
 	}
 }
 
 func TestCanvasPPMLineLength(t *testing.T) {
-	c := graphics.CreateCanvas(10, 2)
+	c := CreateCanvas(10, 2)
 	c.Fill(matht.Color(1, 0.8, 0.6))
 
-	ppmStr := graphics.CanvasToPPM(&c)
+	ppmStr := CanvasToPPM(&c)
 
 	for _, line := range strings.Split(ppmStr, "\n") {
 		if len(line) > 70 {

@@ -194,3 +194,25 @@ func Inverse(matrix Matrix) Matrix {
 
 	return res
 }
+
+func (matrix Matrix) MultiplyTuple(tuple Tuple) Tuple {
+	res := Tuple{}
+	m := len(matrix)
+
+	if m == 0 {
+		return res
+	}
+
+	n := len(matrix[0])
+
+	if m != 4 || n != 4 {
+		panic("Can only multiple tuple with 4x4 matrix")
+	}
+
+	res.X = tuple.X * matrix[0][0] + tuple.Y * matrix[0][1] + tuple.Z * matrix[0][2] + tuple.W * matrix[0][3]
+	res.Y = tuple.X * matrix[1][0] + tuple.Y * matrix[1][1] + tuple.Z * matrix[1][2] + tuple.W * matrix[1][3]
+	res.Z = tuple.X * matrix[2][0] + tuple.Y * matrix[2][1] + tuple.Z * matrix[2][2] + tuple.W * matrix[2][3]
+	res.W = tuple.X * matrix[3][0] + tuple.Y * matrix[3][1] + tuple.Z * matrix[3][2] + tuple.W * matrix[3][3]
+
+	return res
+}
